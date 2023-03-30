@@ -23,9 +23,8 @@ namespace FrontalBiblioteca.Controllers
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(consulta, connection);
-                command.Parameters.AddWithValue("@User", txtNombre);
-                command.Parameters.AddWithValue("@Password", txtPassword);
-
+                command.Parameters.AddWithValue("@user", txtNombre);
+                command.Parameters.AddWithValue("@password", txtPassword);
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -47,8 +46,9 @@ namespace FrontalBiblioteca.Controllers
             }
             else
             {
-                return View("Validacion");
                 Response.Cookies.Add(new HttpCookie("Validacion erronea", "Usuario o contraseña incorrecto"));
+                return View("Validacion");
+               
             }
             
         }
