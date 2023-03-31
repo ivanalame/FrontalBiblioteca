@@ -18,7 +18,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-               <form action="Home/ValidarUsuario" method="post" onsubmit="return validarFormulario()">
+                <form action="Home/ValidarUsuario" method="post" onsubmit="return validarFormulario()">
                     <div asp-validation-summary="ModelOnly"> </div>
 
                     <div class="form-group">
@@ -31,7 +31,7 @@
                         <input type="password" class="form-control" id="password" placeholder="Password">
                     </div>
 
-                    <button type="submit" class="btn btn-success" data-toggle="modal">Verificar</button>
+                    <button type="submit" class="btn btn-success" data-toggle="modal"  onsubmit="return checkCookie()">Verificar</button>
                 </form>
             </div>
         </div>
@@ -48,7 +48,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-   
+
     <script>
         function validarFormulario() {
             // Validar que el contenido del nombre está todo en minúsculas y que como mínimo son 8 caracteres
@@ -69,5 +69,20 @@
             return true;
         }
     </script>
+
+    <script>
+        function checkCookie() {
+            let idcliente = getCookie("user");
+            if (idcliente != "") {
+                alert("Welcome again " + user);
+            } else {
+                idcliente = prompt("Please enter your name:", "");
+                if (idcliente != "" && idcliente != null) {
+                    setCookie("user", user, 365);
+                }
+            }
+        }
+    </script>
+
 </body>
 </html>
