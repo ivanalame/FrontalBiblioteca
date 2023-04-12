@@ -14,34 +14,41 @@ namespace FrontalBiblioteca.Controllers
             return View("Validacion");
         }
 
-        public ActionResult ValidarUsuario(string txtNombre, string txtPassword)
+        public ActionResult ValidarUsuario(string usuario, string password)
         {
-            string connectionString = "Cadena de conexion";
-            string consulta = "SELECT * FROM tabla_usuarios WHERE nombre_usuario =" + txtNombre + " AND contrasena = " + txtPassword + "";
-            bool usuarioExiste = false;
+            //string connectionString = "Cadena de conexion";
+            //string consulta = "SELECT * FROM tabla_usuarios WHERE nombre_usuario =" + txtUsuario + " AND contrasena = " + txtPassword + "";
+            //bool usuarioExiste = false;
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            //using (SqlConnection connection = new SqlConnection(connectionString))
+            //{
+            //    SqlCommand command = new SqlCommand(consulta, connection);
+            //    command.Parameters.AddWithValue("@user", txtUsuario);
+            //    command.Parameters.AddWithValue("@password", txtPassword);
+
+            //    connection.Open();
+            //    SqlDataReader reader = command.ExecuteReader();
+
+            //    if (reader.HasRows)
+            //    {
+            //        usuarioExiste = true;
+            //    }
+
+            //    reader.Close();
+            //    connection.Close();
+            //}
+
+
+            //Borrar 
+
+            // string usuario = Request.Form["usuario"];
+            // string contraseña = Request.Form["password"];
+            var user = Request.Form["usuario"];
+            var contraseña = Request.Form["password"];
+
+            if (user == usuario && contraseña == password)
             {
-                SqlCommand command = new SqlCommand(consulta, connection);
-                command.Parameters.AddWithValue("@user", txtNombre);
-                command.Parameters.AddWithValue("@password", txtPassword);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                if (reader.HasRows)
-                {
-                    usuarioExiste = true;
-                }
-
-                reader.Close();
-                connection.Close();
-            }
-
-
-            if (usuarioExiste)
-            {
-                ViewBag.Mensaje = "Bienvenido" + txtNombre;
+                ViewBag.Mensaje = "Bienvenido" + user;
                 return View("Gestion");
             }
             else

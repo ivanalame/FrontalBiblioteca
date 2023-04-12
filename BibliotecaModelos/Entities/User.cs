@@ -21,7 +21,8 @@ namespace BibliotecaModelos.Entities
             public int Id { get; set; }
             public int Titulo { get; set; }
             public int Editorial { get; set; }
-            public bool reservado;
+            public bool reservado { get; set; }
+            public bool Comprado { get; set; }
 
         }
     }
