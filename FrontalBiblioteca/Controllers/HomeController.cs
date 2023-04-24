@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FrontalBiblioteca.Utilidades;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -43,21 +44,24 @@ namespace FrontalBiblioteca.Controllers
 
             // string usuario = Request.Form["usuario"];
             // string contraseña = Request.Form["password"];
-            var user = Request.Form["usuario"];
-            var contraseña = Request.Form["password"];
+           
+                ViewBag.Mensaje = "Bienvenido" + usuario; 
 
-            if (user == usuario && contraseña == password)
-            {
-                ViewBag.Mensaje = "Bienvenido" + user;
+                Dictionary<string, string> infoLogin = new Dictionary<string, string>();
+                 infoLogin.Add("Usuario", usuario);
+                infoLogin.Add("Password", password);
+
+                 //llamamos al metodo de conectorAPI
+                  var infoAcceso = ConectorAPI.ValidarLoginUsuario(infoLogin, out string msgErr);
+              
                 return View("Gestion");
-            }
-            else
-            {
-                Response.Cookies.Add(new HttpCookie("Validacion erronea", "Usuario o contraseña incorrecto"));
-                return View("Validacion");
+
+     
+
+                //Response.Cookies.Add(new HttpCookie("Validacion erronea", "Usuario o contraseña incorrecto"));
+                //return View("Validacion");
                
-            }
-            
+
         }
 
         //public ActionResult About()

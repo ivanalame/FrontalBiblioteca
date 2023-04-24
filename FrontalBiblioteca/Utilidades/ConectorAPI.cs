@@ -1,13 +1,15 @@
-﻿using System;
+﻿using BibliotecaModelos.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Configuration;
+using static BibliotecaModelos.Entities.Persona;
 
 namespace FrontalBiblioteca.Utilidades
 {
-    public static class ConectorAPI
+    public  class ConectorAPI
     {
         /// <summary>
         /// Mantiene en memoria la url de acceso a la API, sacada desde el web.config
@@ -17,13 +19,23 @@ namespace FrontalBiblioteca.Utilidades
         /// <summary>
         /// Constructor estático para inicializar lo necesario
         /// </summary>
-        static ConectorAPI()
+        static  ConectorAPI()
         {
             try
             {
-                string url = WebConfigurationManager.AppSettings[].ToString();
+                var request = new HttpRequestMessage();
                 
+                string url = WebConfigurationManager.AppSettings["pathBaseWebApiSql"].ToString();
+
                 baseUrlAPI = url;
+
+                HttpClient httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(baseUrlAPI);
+
+
+                //Enviar solicitud
+             //   HttpResponseMessage response = await httpClient.SendAsync(request);
+
             }
             catch (Exception ex)
             {
@@ -196,13 +208,17 @@ namespace FrontalBiblioteca.Utilidades
         //Eso sí... lo que tiene que coincidir es lo que recibas de la llamada (el contenido del ReadAsAsync) con lo que devuelvas desde la API.
         public static Dictionary<string, object> ValidarLoginUsuario(Dictionary<string, string> infoLogin, out string msgErr)
         {
-            Dictionary<string, object> infoAcceso = null;
+            Dictionary<string, object> infoAcceso = new Dictionary<string, object>();
+            //Dictionary<string, object> infoAcceso = null;
             msgErr = null;
 
-            string uri = "api/Usuario/ValidarLoginUsuario";
+            string uri = "api/UsuarioController/ValidarLoginUsuario";
             HttpResponseMessage response = RespuestaPOST(uri, infoLogin);
             if (response.IsSuccessStatusCode)
             {
+                infoAcceso.Add("TieneAcceso", true);
+                infoAcceso.Add("FechaUltimaConexion", DateTime.Now);
+
                 infoAcceso = response.Content.ReadAsAsync<Dictionary<string, object>>().Result;
                 if (infoAcceso == null)
                 {

@@ -1,18 +1,18 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
+
 namespace BibliotecaWebAPI.Controllers
 {
-    public class ApiController : ApiController
+    public class UsuariosController : ApiController
     {
         [HttpPost]
-        [Route("api/Usuarios/ValidarLoginUsuario")]
-        public HttpResponseMessage ValidarLoginUsuario([FromBody] Dictionary<string, string> infoAcceso)
+        [Route("api/UsuariosController/ValidarLoginUsuario")]
+        public HttpResponseMessage ValidarLoginUsuario([FromBody] Dictionary<string, object> infoAcceso)
         {
             HttpResponseMessage response = new HttpResponseMessage();
 
@@ -52,14 +52,16 @@ namespace BibliotecaWebAPI.Controllers
                  *   7.- Se realiza la devolución del Response al ConectorAPI
                  */
 
-                Dictionary<string, object> infoAux = BibliotecaBL.UsuarioBL.ValidarLoginUsuario(infoAcceso);
-
+                // Dictionary<string, object> infoAux = BibliotecaBL.UsuarioBL.ValidarLoginUsuario(infoAcceso);
+                Dictionary<string, object> infoAux = new Dictionary<string, object>();
+                infoAux.Add("Tiene Accesso", true);
+                infoAux.Add("FechaUltimaConexion", DateTime.Now);
                 #endregion Validación
 
                 //Con lo que se nos devuelva desde la DAL -> BL, enviamos la respuesta.
 
                 //Devolvemos el diccionario con toda la información adicional, serializada.
-                response.Content = new StringContent(JsonConvert.SerializeObject(infoAux), System.Text.Encoding.UTF8, "application/json");
+                 response.Content = new StringContent(JsonConvert.SerializeObject(infoAux), System.Text.Encoding.UTF8, "application/json");
                 return response;
             }
             catch (Exception ex)

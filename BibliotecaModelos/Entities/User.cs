@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace BibliotecaModelos.Entities
 {
-    public class Entities
-    {
+   
         public class User
         {
             public int Id { get; set; }
@@ -15,15 +14,5 @@ namespace BibliotecaModelos.Entities
             public int password { get; set; }
 
         }
-
-        public class Libros
-        {
-            public int Id { get; set; }
-            public int Titulo { get; set; }
-            public int Editorial { get; set; }
-            public bool reservado { get; set; }
-            public bool Comprado { get; set; }
-
-        }
-    }
+    
 }

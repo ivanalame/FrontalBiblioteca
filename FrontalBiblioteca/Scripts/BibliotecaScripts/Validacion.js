@@ -29,10 +29,10 @@ function validarFormulario(e) {
 
     // Validar que la password tiene al menos 6 caracteres, con letras y dígitos
     else {
-        var password = "pass123";
+            
             var regex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
             if (!regex.test(password)) {
-                msgerror = "Password is invalid.";
+                msgerror = "La Contraseña debe tener 6 carcateres con letras y digitos";
             } 
     }
          
