@@ -212,7 +212,7 @@ namespace FrontalBiblioteca.Utilidades
             //Dictionary<string, object> infoAcceso = null;
             msgErr = null;
 
-            string uri = "api/UsuarioController/ValidarLoginUsuario";
+            string uri = "api/UsuariosController/ValidarLoginUsuario";
             HttpResponseMessage response = RespuestaPOST(uri, infoLogin);
             if (response.IsSuccessStatusCode)
             {

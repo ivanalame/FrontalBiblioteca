@@ -53,8 +53,20 @@ namespace FrontalBiblioteca.Controllers
 
                  //llamamos al metodo de conectorAPI
                   var infoAcceso = ConectorAPI.ValidarLoginUsuario(infoLogin, out string msgErr);
-              
-                return View("Gestion");
+
+
+                if (infoAcceso.ContainsKey("Existe"))
+                     { 
+
+                         return View("Validacion");
+                        }
+                else
+                    {
+                        return View("Gestion");
+                      
+                    }
+                 
+       
 
      
 

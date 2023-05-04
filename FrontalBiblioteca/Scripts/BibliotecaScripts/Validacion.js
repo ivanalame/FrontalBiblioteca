@@ -4,11 +4,13 @@ function validarFormulario(e) {
     var usuario = document.getElementById("user").value;
     var password = document.getElementById("password").value;
 
+    var regex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
+
     // var passIncorrect = document.getElementById('pass-incorrect');
     var message = document.getElementById('message');
 
     var msgerror = "";
-
+    ava
     //Validar que usuario y contraseña no sean iguales
     if (usuario === password) {
         // alert("El usuario y la contraseña no pueden ser iguales")
@@ -28,13 +30,18 @@ function validarFormulario(e) {
     }
 
     // Validar que la password tiene al menos 6 caracteres, con letras y dígitos
-    else {
-            
-            var regex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
-            if (!regex.test(password)) {
-                msgerror = "La Contraseña debe tener 6 carcateres con letras y digitos";
-            } 
+    else if (!regex.test(password)) {
+
+        msgerror = "La Contraseña debe tener 6 carcateres con letras y digitos";
     }
+
+    else {
+
+        msgerror = "La Contraseña o el usuario no estan en la bbdd ";
+    }
+   
+       
+
          
 
     if (msgerror !== "") {
