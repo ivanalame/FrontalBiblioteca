@@ -98,7 +98,7 @@ namespace FrontalBiblioteca.Controllers
                         //Creamos una nueva cookie y añadimos la Key idCliente con el valor que contiene la variable idCliente
                         Response.Cookies.Add(new HttpCookie("idCliente", idCliente));
                         return View("listadolibros");
-                      
+                      //
                     }
  
                 //Response.Cookies.Add(new HttpCookie("Validacion erronea", "Usuario o contraseña incorrecto"));
