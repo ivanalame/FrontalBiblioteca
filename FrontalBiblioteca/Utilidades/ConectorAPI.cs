@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Web;
 using System.Web.Configuration;
 using static BibliotecaModelos.Entities.Persona;
@@ -129,7 +130,7 @@ namespace FrontalBiblioteca.Utilidades
         /// <param name="o">Objeto a pasar para su alta</param>
         /// <param name="segundosTimeout">Establece los segundos de tiempo de espera de la llamada. Opcional. Por defecto, 100</param>
         /// <returns></returns>
-      
+       
         static HttpResponseMessage RespuestaPOST(string uri, object o, int segundosTimeout = -1)
         {
             //Hay que chequear limitaciones de tamaño en el objeto.
@@ -199,6 +200,10 @@ namespace FrontalBiblioteca.Utilidades
             }
         }
 
+        //public HttpResponseMessage ObtenerDetalles([FromBody],String uri, int idLibro)
+        //{
+        //    RespuestaPOST(uri, idLibro);
+        //}
         #endregion
 
         #region Métodos públicos
@@ -256,6 +261,30 @@ namespace FrontalBiblioteca.Utilidades
             return usuarios;
         }
 
+        public static List<Libro> ObtenerLibros(Dictionary<string,string> requestform, out string msgErr)
+        {
+            List<Libro> listalibros = new List<Libro>();
+            msgErr = null;
+            string uri = "api/LibrosController/ObtenerLibros";
+            HttpResponseMessage response = RespuestaPOST(uri, requestform);
+
+            if (response.IsSuccessStatusCode)
+            {
+
+                listalibros = response.Content.ReadAsAsync<List<Libro>>().Result;
+                if (listalibros == null)
+                {
+                    msgErr = "Diccionario vacío. Error en llamada a " + uri + " - Motivo: " + response.ReasonPhrase;
+                }
+
+
+            }
+            else
+            {
+                msgErr = "Error en llamada a " + uri + " - Motivo: " + response.ReasonPhrase;
+            }
+            return listalibros;
+        }
         #endregion
     }
 }
