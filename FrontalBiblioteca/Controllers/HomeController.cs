@@ -59,10 +59,10 @@ namespace FrontalBiblioteca.Controllers
             Dictionary<string, string> infoLogin = new Dictionary<string, string>();
 
             //creamos el diccionario idcliente para almacenar el iddelcliente
-            Dictionary<string, string> idcliente = new Dictionary<string, string>();
+            Dictionary<string, string> filtrolibros = new Dictionary<string, string>();
 
             infoLogin.Add("Usuario", usuario);
-                infoLogin.Add("Password", password);
+            infoLogin.Add("Password", password);
 
             //Hacemos una instacia de una lista
             List<Libro> listalibros = new List<Libro>();
@@ -86,17 +86,21 @@ namespace FrontalBiblioteca.Controllers
                             string value = Request.Form[keyString];
                             requestform.Add(keyString, value);
                         }
-                        listalibros = ConectorAPI.ObtenerLibros(requestform, out string msgErrLibros);
-                         
-                        ViewData["Libros"] = listalibros;
+                      
+  
 
                         //creamos una variable para recoger el valor que contiene la Key idcliente 
                         string idCliente = infoAcceso["idCliente"].ToString();
+                        string NombreUsuario = infoAcceso["NombreUsuario"].ToString();
                         //lo añado al diccionario 
-                        idcliente.Add("idCliente", idCliente);
+                        filtrolibros.Add("idCliente", idCliente);
+                         filtrolibros.Add("NombreUsuario", NombreUsuario);
 
-                        //Creamos una nueva cookie y añadimos la Key idCliente con el valor que contiene la variable idCliente
-                        Response.Cookies.Add(new HttpCookie("idCliente", idCliente));
+                listalibros = ConectorAPI.ObtenerLibros(filtrolibros, out string msgErrLibros);
+
+                ViewData["Libros"] = listalibros;
+                //Creamos una nueva cookie y añadimos la Key idCliente con el valor que contiene la variable idCliente
+                Response.Cookies.Add(new HttpCookie("idCliente", idCliente));
                         return View("listadolibros");
                       //
                     }

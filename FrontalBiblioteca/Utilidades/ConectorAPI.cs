@@ -261,12 +261,12 @@ namespace FrontalBiblioteca.Utilidades
             return usuarios;
         }
 
-        public static List<Libro> ObtenerLibros(Dictionary<string,string> requestform, out string msgErr)
+        public static List<Libro> ObtenerLibros(Dictionary<string,string> filtrolibros, out string msgErr)
         {
             List<Libro> listalibros = new List<Libro>();
             msgErr = null;
             string uri = "api/LibrosController/ObtenerLibros";
-            HttpResponseMessage response = RespuestaPOST(uri, requestform);
+            HttpResponseMessage response = RespuestaPOST(uri, filtrolibros);
 
             if (response.IsSuccessStatusCode)
             {

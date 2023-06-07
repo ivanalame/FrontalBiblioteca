@@ -9,13 +9,7 @@ namespace BibliotecaBL
 {
     public class UsuarioBL
     {
-        public static List<Libro> ObtenerLibros(List<Libro> infoAccesoLibros)
-        {
-            //aqui almaceno todo lo que me llega desde la DAL 
-            List<Libro> listalibros = BibliotecaDAL.UsuariosDAL.ObtenerLibros(); ;
-
-            return listalibros;
-        }
+      
 
         public static Dictionary<string, string> ValidarLoginUsuario(Dictionary<string, string> infoAcceso)
         {
