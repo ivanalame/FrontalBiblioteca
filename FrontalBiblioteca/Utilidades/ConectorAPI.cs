@@ -10,7 +10,7 @@ using static BibliotecaModelos.Entities.Persona;
 
 namespace FrontalBiblioteca.Utilidades
 {
-    public  class ConectorAPI
+    public class ConectorAPI
     {
         /// <summary>
         /// Mantiene en memoria la url de acceso a la API, sacada desde el web.config
@@ -20,12 +20,12 @@ namespace FrontalBiblioteca.Utilidades
         /// <summary>
         /// Constructor estático para inicializar lo necesario
         /// </summary>
-        static  ConectorAPI()
+        static ConectorAPI()
         {
             try
             {
                 var request = new HttpRequestMessage();
-                
+
                 string url = WebConfigurationManager.AppSettings["pathBaseWebApiSql"].ToString();
 
                 baseUrlAPI = url;
@@ -35,7 +35,7 @@ namespace FrontalBiblioteca.Utilidades
 
 
                 //Enviar solicitud
-             //   HttpResponseMessage response = await httpClient.SendAsync(request);
+                //   HttpResponseMessage response = await httpClient.SendAsync(request);
 
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace FrontalBiblioteca.Utilidades
         /// <param name="uri">Cadena con la uri relativa de llamada a la API</param>
         /// <param name="segundosTimeout">Establece los segundos de tiempo de espera de la llamada. Opcional. Por defecto, 100</param>
         /// <returns></returns>
-      
+
         static HttpResponseMessage RespuestaGET(string uri, int segundosTimeout = -1)
         {
             string url = baseUrlAPI + uri;
@@ -130,7 +130,7 @@ namespace FrontalBiblioteca.Utilidades
         /// <param name="o">Objeto a pasar para su alta</param>
         /// <param name="segundosTimeout">Establece los segundos de tiempo de espera de la llamada. Opcional. Por defecto, 100</param>
         /// <returns></returns>
-       
+
         static HttpResponseMessage RespuestaPOST(string uri, object o, int segundosTimeout = -1)
         {
             //Hay que chequear limitaciones de tamaño en el objeto.
@@ -261,7 +261,7 @@ namespace FrontalBiblioteca.Utilidades
             return usuarios;
         }
 
-        public static List<Libro> ObtenerLibros(Dictionary<string,string> filtrolibros, out string msgErr)
+        public static List<Libro> ObtenerLibros(Dictionary<string, string> filtrolibros, out string msgErr)
         {
             List<Libro> listalibros = new List<Libro>();
             msgErr = null;
@@ -284,6 +284,72 @@ namespace FrontalBiblioteca.Utilidades
                 msgErr = "Error en llamada a " + uri + " - Motivo: " + response.ReasonPhrase;
             }
             return listalibros;
+        }
+
+
+
+        public static Libro ObtenerLibroMedianteId(int idlibro, out string msgErr)
+        {
+            Libro DetalleDelLibro = new Libro();
+            msgErr = null;
+            string uri = "api/LibrosController/ObtenerLibroMedianteId";
+            HttpResponseMessage response = RespuestaPOST(uri, idlibro);
+
+            if (response.IsSuccessStatusCode)
+            {
+
+                DetalleDelLibro = response.Content.ReadAsAsync<Libro>().Result;
+                if (DetalleDelLibro == null)
+                {
+                    msgErr = "Diccionario vacío. Error en llamada a " + uri + " - Motivo: " + response.ReasonPhrase;
+                }
+
+
+            }
+            else
+            {
+                msgErr = "Error en llamada a " + uri + " - Motivo: " + response.ReasonPhrase;
+            }
+            return DetalleDelLibro;
+        }
+
+        //Este método recibe un diccionario "filtros" y una variable de referencia "msgErr",
+        //y devuelve una lista de libros "listalibros" que cumpla con los filtros proporcionados.
+
+        public static List<Libro> ObtenerLibrosFiltrados(Dictionary<string, string> filtros, out string msgErr)
+        {
+            // Creamos una instancia de una lista de libros llamada "listalibros" y establecemos la variable "msgErr" en null.
+            List<Libro> listalibros = new List<Libro>();
+            msgErr = null;
+
+            // Definimos una cadena "uri" que contiene la ruta al endpoint de la API que se encarga de obtener los libros filtrados.
+            string uri = "api/LibrosController/ObtenerLibrosFiltrados";
+
+            // Llamamos al método "RespuestaPOST" pasando como argumentos la cadena de ruta "uri" y el diccionario "filtros". Guardamos la respuesta en una variable "response" de tipo HttpResponseMessage.
+            HttpResponseMessage response = RespuestaPOST(uri, filtros);
+
+            // Si la respuesta se obtiene correctamente, convertimos el contenido de la respuesta a una lista de libros utilizando el método .ReadAsAsync<List<Libro>>(),
+            // lo cual nos devuelve una tarea. Luego, obtenemos el resultado de la tarea mediante el método .Result y
+            // asignamos la lista resultante a "listalibros". Si "listalibros" está vacía, establecemos la variable de referencia "msgErr"
+            // para almacenar un mensaje de error.
+            if (response.IsSuccessStatusCode)
+            {
+                listalibros = response.Content.ReadAsAsync<List<Libro>>().Result;
+                if (listalibros == null)
+                {
+                    msgErr = "Diccionario vacío. Error en llamada a " + uri + " - Motivo: " + response.ReasonPhrase;
+                }
+            }
+            // Si la respuesta no se obtiene correctamente, establecemos la variable de referencia "msgErr" con un mensaje de error que incluye la ruta de la API y el mensaje de error proporcionado por la respuesta.
+            else
+            {
+                msgErr = "Error en llamada a " + uri + " - Motivo: " + response.ReasonPhrase;
+            }
+
+            // Devolvemos la lista resultante "listalibros".
+            return listalibros;
+
+            throw new NotImplementedException();
         }
         #endregion
     }

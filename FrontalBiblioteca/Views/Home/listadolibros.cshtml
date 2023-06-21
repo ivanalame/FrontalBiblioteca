@@ -1,6 +1,10 @@
 ﻿@{
     ViewBag.Title = "ListadoLibros";
     var libros = ViewData["Libros"] as List<BibliotecaModelos.Entities.Libro>;
+    var titulosLibros = (ViewData["Libros"] as List<BibliotecaModelos.Entities.Libro>)?.Select(libro => libro.Titulo).ToList();
+    var autoresLibros = (ViewData["Libros"] as List<BibliotecaModelos.Entities.Libro>)?.Select(libro => libro.Autor).ToList();
+    var editorialesLibros = (ViewData["Libros"] as List<BibliotecaModelos.Entities.Libro>)?.Select(libro => libro.Editorial).ToList();
+    var coleccionesLibros = (ViewData["Libros"] as List<BibliotecaModelos.Entities.Libro>)?.Select(libro => libro.Coleccion).ToList();
 }
 <!doctype html>
 <html lang="en">
@@ -20,76 +24,134 @@
 <body>
     <h2 class="text-center">ListadoLibros</h2>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-8">
-                <table class="table table-bordered" id="tablaLibros">
-                    <thead>
-                        <tr>
-                            <th>Acciones</th>
-                            <th>Título</th>
-                            <th>Autor</th>
-                            <th>Editorial</th>
-                            <th>Coleccion</th>
-                            <th>Fecha Primera Edicion</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (libros != null && libros.Count > 0)
-                        {
-                            foreach (var libro in libros)
+
+        <form action="~/Home/filtro" method="post" onsubmit="filtro(window.event)">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select class="form-control" name="titulo" id="titulo">
+                            <option disabled selected>Elija titulo</option>
+                            @foreach (var titulo in titulosLibros)
                             {
-                                <tr>
-                                    <td><button>Detalle</button></td>
-                                    <td>@libro.Titulo</td>
-                                    @if (libro.Autor == null)
-                                    {
-                                        <td>-</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@libro.Autor</td>
-                                    }
-                                    @if (libro.Editorial == null)
-                                    {
-                                        <td>-</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@libro.Editorial</td>
-                                    }
-                                    @if (libro.Coleccion == null)
-                                    {
-                                        <td>-</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@libro.Coleccion</td>
-                                    }
-                                    @if (libro.FechaPrimeraEdicion == null)
-                                    {
-                                        <td>-</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@libro.FechaPrimeraEdicion</td>
-                                    }
-
-
-
-                                </tr>
+                                <option value="@titulo">@titulo</option>
                             }
-                        }
-                        else
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" name="autor" id="autor">
+                            <option disabled selected>Elija Autor</option>
+                            @foreach (var autor in autoresLibros)
+                            {
+                                <option value="@autor">@autor</option>
+                            }
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" name="editorial" id="editorial">
+                            <option disabled selected>Elija Editorial</option>
+                            @foreach (var editorial in editorialesLibros)
+                            {
+                                <option value="@editorial">@editorial</option>
+                            }
+                        </select><asp:ImageMap runat="server"></asp:ImageMap>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="coleccion" id="coleccion">
+                            <option disabled selected>Elija Coleccion</option>
+                            @foreach (var coleccion in coleccionesLibros)
+                            {
+                                <option value="@coleccion">@coleccion</option>
+                            }
+                        </select>
+                    </div>
+                    <button id="btnFiltrar" class="btn btn-primary m-2" type="submit">Filtrar</button>
+                    <button id="btnLimpiar" class="btn btn-secondary m-2" type="reset">Limpiar</button>
+        </form>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <table class="table table-bordered" id="tablaLibros">
+                <thead>
+                    <tr>
+                        <th>Acciones</th>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Editorial</th>
+                        <th>Coleccion</th>
+                        <th>Fecha Primera Edicion</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (libros != null && libros.Count > 0)
+                    {
+                        foreach (var libro in libros)
                         {
                             <tr>
-                                <td colspan="4">No se encontraron libros.</td>
+                                <td>
+                                    <form action="~/Home/Detalle" method="post">
+                                        <input type="hidden" name="idlibro" value="@libro.idLibro" />
+                                        <button type="submit">Detalle</button>
+                                    </form>
+                                </td>
+
+                                <td>@libro.Titulo</td>
+                                @if (libro.Autor == null)
+                                {
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>@libro.Autor</td>
+                                }
+                                @if (libro.Editorial == null)
+                                {
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>@libro.Editorial</td>
+                                }
+                                @if (libro.Coleccion == null)
+                                {
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>@libro.Coleccion</td>
+                                }
+                                @if (libro.FechaPrimeraEdicion == null)
+                                {
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>@libro.FechaPrimeraEdicion</td>
+                                }
+
+
+
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">No se encontraron libros.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
+    </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

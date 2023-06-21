@@ -10,6 +10,45 @@ namespace BibliotecaDAL
 {
     public class LibrosDAL
     {
+        public static Libro ObtenerLibroMedianteId(int idlibro)
+        {
+            Libro detallelibro = new Libro();
+
+            using (SqlConnection con = new SqlConnection(UtilDAL.CadenaConexion))
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = con,
+                    //Metemos la query para sacar la informacion que queramos
+                    CommandText = "SELECT * FROM Libros WHERE idLibro = @idlibro"
+                };
+
+                command.Parameters.AddWithValue("@idlibro", idlibro);
+
+                con.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    detallelibro.idLibro = Convert.ToInt32(reader["idLibro"]);
+                    detallelibro.ISBN = reader["ISBN"].ToString();
+                    detallelibro.Titulo = reader["Titulo"].ToString();
+                    if (reader["Sinopsis"] != DBNull.Value)
+                        detallelibro.Sinopsis = reader["Sinopsis"].ToString();
+                    if (reader["Autor"] != DBNull.Value)
+                        detallelibro.Autor = reader["Autor"].ToString();
+                    if (reader["Editorial"] != DBNull.Value)
+                        detallelibro.Editorial = reader["Editorial"].ToString();
+                    if (reader["Coleccion"] != DBNull.Value)
+                        detallelibro.Coleccion = reader["Coleccion"].ToString();
+                    if (reader["FechaPrimeraEdicion"] != DBNull.Value)
+                        detallelibro.FechaPrimeraEdicion = Convert.ToDateTime(reader["FechaPrimeraEdicion"]);
+                }
+            }
+            return detallelibro;
+        }
+
         public static List<Libro> ObtenerLibros(Dictionary<string, string> filtrolibros)
         {
             var listalibros = new List<Libro>();
@@ -30,41 +69,20 @@ namespace BibliotecaDAL
                 {
                     var libro = new Libro();
 
-                    for (var i = 0; i < reader.FieldCount; i++)
-                    {
-                        var columnName = reader.GetName(i);
-                        var columnValue = reader.GetValue(i);
+                    libro.idLibro = Convert.ToInt32(reader["idLibro"]);
+                    libro.ISBN = reader["ISBN"].ToString();
+                    libro.Titulo = reader["Titulo"].ToString();
+                    if (reader["Sinopsis"] != DBNull.Value)
+                        libro.Sinopsis = reader["Sinopsis"].ToString();
+                    if (reader["Autor"] != DBNull.Value)
+                        libro.Autor = reader["Autor"].ToString();
+                    if (reader["Editorial"] != DBNull.Value)
+                        libro.Editorial = reader["Editorial"].ToString();
+                    if (reader["Coleccion"] != DBNull.Value)
+                        libro.Coleccion = reader["Coleccion"].ToString();
+                    if (reader["FechaPrimeraEdicion"] != DBNull.Value)
+                        libro.FechaPrimeraEdicion = Convert.ToDateTime(reader["FechaPrimeraEdicion"]);
 
-                        // Utilizar un switch para asignar los valores a las propiedades segÃºn el nombre de la columna
-                        switch (columnName)
-                        {
-                            case "idLibro":
-                                libro.idLibro = (int)(columnValue as int?);
-                                break;
-                            case "ISBN":
-                                libro.ISBN = columnValue as string;
-                                break;
-                            case "Titulo":
-                                libro.Titulo = columnValue as string;
-                                break;
-                            case "Sinopsis":
-                                libro.Sinopsis = columnValue as string;
-                                break;
-                            case "Autor":
-                                libro.Autor = columnValue as string;
-                                break;
-                            case "Editorial":
-                                libro.Editorial = columnValue as string;
-                                break;
-                            case "Coleccion":
-                                libro.Coleccion = columnValue as string;
-                                break;
-                            case "FechaPrimeraEdicion":
-                                libro.FechaPrimeraEdicion = columnValue as DateTime?;
-                                break;
-
-                        }
-                    }
 
                     listalibros.Add(libro);
                 }
@@ -72,5 +90,56 @@ namespace BibliotecaDAL
 
             return listalibros;
         }
+
+        public static List<Libro> ObtenerLibrosfiltro(string titulo, string autor, string editorial, string coleccion)
+        {
+            // Inicializamos una nueva lista "listalibrosfiltrados"
+            var listalibrosfiltrados = new List<Libro>();
+
+            // Utilizamos la clase SqlConnection para establecer una conexión a la base de datos, utilizando la cadena de conexión definida en la clase UtilDAL.
+            using (SqlConnection con = new SqlConnection(UtilDAL.CadenaConexion))
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = con,
+                    //Metemos la query para sacar la informacion que queramos
+                    CommandText = "SELECT * FROM Libros WHERE Titulo = @titulo AND Autor = @autor AND Editorial = @editorial AND Coleccion = @coleccion"
+                };
+
+                command.Parameters.AddWithValue("@titulo", titulo);
+                command.Parameters.AddWithValue("@autor", autor);
+                command.Parameters.AddWithValue("@editorial", editorial);
+                command.Parameters.AddWithValue("@coleccion", coleccion);
+
+                con.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var libro = new Libro();
+
+                    libro.idLibro = Convert.ToInt32(reader["idLibro"]);
+                    libro.ISBN = reader["ISBN"].ToString();
+                    libro.Titulo = reader["Titulo"].ToString();
+                    if (reader["Sinopsis"] != DBNull.Value)
+                        libro.Sinopsis = reader["Sinopsis"].ToString();
+                    if (reader["Autor"] != DBNull.Value)
+                        libro.Autor = reader["Autor"].ToString();
+                    if (reader["Editorial"] != DBNull.Value)
+                        libro.Editorial = reader["Editorial"].ToString();
+                    if (reader["Coleccion"] != DBNull.Value)
+                        libro.Coleccion = reader["Coleccion"].ToString();
+                    if (reader["FechaPrimeraEdicion"] != DBNull.Value)
+                        libro.FechaPrimeraEdicion = Convert.ToDateTime(reader["FechaPrimeraEdicion"]);
+
+
+
+                    listalibrosfiltrados.Add(libro);
+                }
+            }
+
+            return listalibrosfiltrados;
+        }
     }
+
 }

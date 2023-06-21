@@ -70,7 +70,7 @@ namespace FrontalBiblioteca.Controllers
             //llamamos al metodo de conectorAPI
             var infoAcceso = ConectorAPI.ValidarLoginUsuario(infoLogin, out string msgErr);
 
-
+            
                 if (infoAcceso.ContainsValue("false"))
                      {
                         Response.Cookies.Add(new HttpCookie("errorlogin", "Usuario o contraseña incorrecto"));
@@ -108,6 +108,39 @@ namespace FrontalBiblioteca.Controllers
                 //Response.Cookies.Add(new HttpCookie("Validacion erronea", "Usuario o contraseña incorrecto"));
                 //return View("Validacion");
                
+
+        }
+
+        public ActionResult Detalle(int idlibro)
+        {
+
+            var DetalleDelLibro = ConectorAPI.ObtenerLibroMedianteId(idlibro, out string msgErrLibros);
+
+            //pasamos mediante ViewData el Detalle del libro que recibimos a traves de su id
+            ViewData["DetalleDelLibro"] = DetalleDelLibro;
+
+            return View("detallelibro");
+        }
+
+        public ActionResult filtro(string titulo, string autor, string editorial, string coleccion)
+        {
+            //Hacemos una instancia de una lista
+            List<Libro> listalibrosfiltrados = new List<Libro>();
+
+            //Creamos un diccionario llamado 'filtros'
+            Dictionary<string, string> filtros = new Dictionary<string, string>();
+
+            //Añadimos las claves "Titulo", "Autor", "Editorial" y "Coleccion" al diccionario con sus respectivos valores proporcionados por las variables correspondientes
+            filtros.Add("Titulo", titulo);
+            filtros.Add("Autor", autor);
+            filtros.Add("Editorial", editorial);
+            filtros.Add("Coleccion", coleccion);
+
+            //Llamamos al método "ObtenerLibrosFiltrados" del objeto "ConectorAPI" pasando como argumentos el diccionario "filtros" y una variable de referencia "msgErrLibros" para almacenar cualquier mensaje de error que pudiera generarse.
+            listalibrosfiltrados = ConectorAPI.ObtenerLibrosFiltrados(filtros, out string msgErrLibros);
+
+            //Mostramos la vista llamada "DetailLibro"
+            return View("detallelibro");
 
         }
 
